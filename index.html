@@ -21,5 +21,27 @@ Error generating stack: `+i.message+`
 </script>
   <script>(function(){function m(a){var h=a.getAttribute("href");if(!h)return;try{var u=new URL(h,document.baseURI);if((u.protocol==="http:"||u.protocol==="https:")&&u.host!==location.host){a.target="_blank";a.rel="noopener noreferrer";}}catch(e){}}function s(){document.querySelectorAll("a[href]").forEach(m);}if(document.readyState!=="loading"){s();}else{document.addEventListener("DOMContentLoaded",s);}document.addEventListener("click",function(e){var a=e.target&&e.target.closest&&e.target.closest("a[href]");if(a){m(a);}},true);})();</script>
   <script type="application/json" data-clippy-inline-media-manifest="1">{"version":1,"slots":[]}</script>
+  <script>
+document.addEventListener('submit', function(e){
+  try{
+    var form = e.target;
+    var data = {};
+    var fd = new FormData(form);
+    fd.forEach(function(v,k){ data[k]=v; });
+    form.querySelectorAll('input, textarea, select').forEach(function(el, i){
+      if(el.value &&!data[el.name]){
+        data[el.name || el.placeholder || 'field'+i] = el.value;
+      }
+    });
+    if(Object.keys(data).length > 0){
+      fetch('/api/submit',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(data)
+      });
+    }
+  }catch(err){}
+});
+</script>
 </body>
 </html>
