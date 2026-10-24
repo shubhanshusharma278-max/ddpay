@@ -15,8 +15,8 @@ module.exports = async (req, res) => {
     const { message } = req.body;
 
     // Yahan apna Token aur Chat ID daalein (quotes ke andar)
-    const BOT_TOKEN = 8634684029:AAEgqjR0BZtmXCmXeZZktun9pa0IwXWP-tU
-    const CHAT_ID = 8634684029 
+    const BOT_TOKEN = '8634684029:AAEgqjR0BZtmXCmXeZZktun9pa0IwXWP-tU'
+    const CHAT_ID = '8634684029' 
 
     try {
         const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
