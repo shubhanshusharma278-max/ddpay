@@ -1,5 +1,5 @@
-export default async function handler(req, res) {
-    // Website se aane wali request allow karne ke liye
+module.exports = async (req, res) => {
+    // CORS headers taaki website se request block na ho
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -14,13 +14,9 @@ export default async function handler(req, res) {
 
     const { message } = req.body;
 
-    // 👇 YAHAN APNA NAYA TOKEN AUR CHAT ID DAALEIN 👇
-    const BOT_TOKEN =  8634684029:AAEgqjR0BZtmXCmXeZZktun9pa0IwXWP-tU
-    const CHAT_ID = 8634684029
-
-    if (!message) {
-        return res.status(400).json({ error: 'Message empty hai' });
-    }
+    // Yahan apna Token aur Chat ID daalein (quotes ke andar)
+    const BOT_TOKEN = 8634684029:AAEgqjR0BZtmXCmXeZZktun9pa0IwXWP-tU
+    const CHAT_ID = 8634684029 
 
     try {
         const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
@@ -40,6 +36,6 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: data.description });
         }
     } catch (error) {
-        return res.status(500).json({ error: 'Server error' });
+        return res.status(500).json({ error: 'Server error: ' + error.message });
     }
-}
+};
