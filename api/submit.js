@@ -1,5 +1,5 @@
 module.exports = async (req, res) => {
-    // CORS headers taaki website se request block na ho
+    // CORS headers
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -14,9 +14,11 @@ module.exports = async (req, res) => {
 
     const { message } = req.body;
 
-    // Yahan apna Token aur Chat ID daalein (quotes ke andar)
-    const BOT_TOKEN = '8634684029:AAEgqjR0BZtmXCmXeZZktun9pa0IwXWP-tU'
-    const CHAT_ID = '8634684029' 
+    // Aapka Bot Token (Yeh bilkul sahi hai)
+    const BOT_TOKEN = '8634684029:AAEgqjR0BZtmXCmXeZZktun9pa0IwXWP-tU';
+    
+    // 🚨 YAHAN APNI ASLI PERSONAL CHAT ID DAALEIN (Bot ki ID nahi) 🚨
+    const CHAT_ID = '2050818293' 
 
     try {
         const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
