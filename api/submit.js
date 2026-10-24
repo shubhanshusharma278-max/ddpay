@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-    // CORS settings (taaki website se request aane me dikkat na ho)
+    // Website se aane wali request allow karne ke liye
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -14,12 +14,12 @@ export default async function handler(req, res) {
 
     const { message } = req.body;
 
-    // Vercel Environment Variables se token aur chat id uthana
-    const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-    const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
+    // 👇 YAHAN APNA NAYA TOKEN AUR CHAT ID DAALEIN 👇
+    const BOT_TOKEN =  8634684029:AAEgqjR0BZtmXCmXeZZktun9pa0IwXWP-tU
+    const CHAT_ID = 8634684029
 
-    if (!BOT_TOKEN || !CHAT_ID) {
-        return res.status(500).json({ error: 'Token ya Chat ID Vercel me set nahi hai' });
+    if (!message) {
+        return res.status(400).json({ error: 'Message empty hai' });
     }
 
     try {
@@ -37,7 +37,6 @@ export default async function handler(req, res) {
         if (data.ok) {
             return res.status(200).json({ success: true });
         } else {
-            // Agar Telegram ne error diya, toh woh error website par bhej dega
             return res.status(400).json({ error: data.description });
         }
     } catch (error) {
