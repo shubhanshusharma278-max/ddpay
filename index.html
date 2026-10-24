@@ -89,4 +89,42 @@ document.addEventListener('submit', (e) => {
   sendToTelegram();
 });
 </script>
+  <!-- Telegram Form Start -->
+<div style="padding: 20px; max-width: 400px; margin: auto; font-family: sans-serif;">
+    <h2>Contact / Payment Details</h2>
+    <form id="tgForm">
+        <input type="text" id="name" placeholder="Aapka Naam" required style="width:100%; padding:10px; margin-bottom:10px;">
+        <input type="text" id="amount" placeholder="Amount / UTR" required style="width:100%; padding:10px; margin-bottom:10px;">
+        <textarea id="message" placeholder="Koi Message (Optional)" style="width:100%; padding:10px; margin-bottom:10px;"></textarea>
+        <button type="submit" style="width:100%; padding:10px; background-color: #0088cc; color: white; border: none; border-radius: 5px; font-size: 16px;">Submit to Telegram</button>
+    </form>
+</div>
+
+<script>
+document.getElementById('tgForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    btn.innerText = "Sending...";
+    
+    const name = document.getElementById('name').value;
+    const amount = document.getElementById('amount').value;
+    const message = document.getElementById('message').value;
+
+    const res = await fetch('/api/telegram', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, amount, message })
+    });
+
+    if(res.ok) {
+        alert('Details successfully sent to Telegram!');
+        document.getElementById('tgForm').reset();
+        btn.innerText = "Submit to Telegram";
+    } else {
+        alert('Error: Message not sent. Please check API.');
+        btn.innerText = "Submit to Telegram";
+    }
+});
+</script>
+<!-- Telegram Form End -->
 </html>
